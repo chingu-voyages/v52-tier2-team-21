@@ -35,7 +35,7 @@ your repo access and to practice PR'ing with your team _before_ you start
 coding!
 
 - Elizabeth Odhiambo(akinyi_liz): [GitHub](https://github.com/akinyiliz) / [LinkedIn](https://www.linkedin.com/in/elizabethodhiambo/)
-- Teammate name #2: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
+- Zarrar Hussain Abid: [GitHub](https://github.com/Zarrarabid) / [LinkedIn](https://www.linkedin.com/in/zarrar-abid-a1667121a/)
 
   ...
 
