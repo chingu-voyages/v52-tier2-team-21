@@ -36,7 +36,4 @@ coding!
 
 - Elizabeth Odhiambo(akinyi_liz): [GitHub](https://github.com/akinyiliz) / [LinkedIn](https://www.linkedin.com/in/elizabethodhiambo/)
 - Zarrar Hussain Abid: [GitHub](https://github.com/Zarrarabid) / [LinkedIn](https://www.linkedin.com/in/zarrar-abid-a1667121a/)
-
-  ...
-
-- Teammate name #n: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
+- Parykhan Jameel: [GitHub](https://github.com/parykhan-jameel) / [LinkedIn](https://linkedin.com/in/parykhan-jameel)
