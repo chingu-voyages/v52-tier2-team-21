@@ -1,11 +1,69 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
+
+interface SignupDetails {
+    email: string;
+    pass: string;
+}
 
 function Login() {
     const Navigate = useNavigate()
+    const userDetails: any = localStorage.getItem("user_info") ? (localStorage.getItem("user_info")) : null;
+    const [sigupDetails, setSigupDetails] = useState<SignupDetails>({
+        email: "",
+        pass: "",
+    })
+
+    const handleLogin = () => {
+        if (
+            !sigupDetails?.email
+        ) {
+            toast.error("Enter Email first")
+            return
+        }
+        if (
+            !sigupDetails?.pass
+        ) {
+            toast.error("Enter Password first")
+            return
+        }
+        if (userDetails == null ) {
+            toast.error("Kindly Register first")
+        }
+        console.log(sigupDetails?.email,"first",JSON.parse(userDetails)?.email)
+        if (sigupDetails?.email != JSON.parse(userDetails)?.email) {
+            toast.error("No user found with this email")
+        }
+        if(
+            sigupDetails?.pass != JSON.parse(userDetails)?.pass
+        )
+        {
+            toast.error("Wrong Password Entered")
+            return
+        }
+        if(
+            sigupDetails?.email != JSON.parse(userDetails)?.email
+        )
+        {
+            toast.error("Wrong Email Entered")
+            return
+        }
+        toast.success("Login Succesfully")
+        setTimeout(() => {
+            if(JSON.parse(userDetails)?.role == "Admin")
+                {
+                    Navigate("/app/admin-dashboard")
+                }
+                else{
+                    Navigate("/app/resident")
+                }
+        }, 2000);
+    }
     return (
 
         <div className='flex flex-auto justify-center items-center h-[100vh]'>
+            <ToastContainer />
             <div
                 className="relative flex w-96 flex-col justify-center h-min rounded-xl bg-white bg-clip-border text-gray-700 shadow-md"
             >
@@ -23,8 +81,16 @@ function Login() {
 
                     <div className="relative h-11 w-full min-w-[200px] ">
                         <input
-
+                            onChange={(e) => {
+                                setSigupDetails((prev) => {
+                                    return {
+                                        ...prev,
+                                        email: e.target.value
+                                    }
+                                })
+                            }}
                             type='email'
+                            value={sigupDetails?.email}
                             className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-cyan-500 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                         />
                         <label
@@ -35,7 +101,16 @@ function Login() {
                     </div>
                     <div className="relative h-11 w-full min-w-[200px]">
                         <input
+                            onChange={(e) => {
+                                setSigupDetails((prev) => {
+                                    return {
+                                        ...prev,
+                                        pass: e.target.value
+                                    }
+                                })
+                            }}
                             type='password'
+                            value={sigupDetails?.pass}
                             className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-cyan-500 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                         />
                         <label
@@ -48,7 +123,7 @@ function Login() {
                 </div>
                 <div className="p-6 pt-0">
                     <button
-
+                        onClick={() => handleLogin()}
                         data-ripple-light="true"
                         type="button"
                         className="block w-full select-none rounded-lg bg-gradient-to-tr from-cyan-600 to-cyan-400 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-cyan-500/20 transition-all hover:shadow-lg hover:shadow-cyan-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
@@ -60,8 +135,8 @@ function Login() {
                     >
                         Don't have an account?
                         <a
-                            className="ml-1 block font-sans text-sm font-bold leading-normal text-cyan-500 antialiased"
-                            onClick={()=> Navigate("/")}
+                            className="ml-1 block font-sans text-sm font-bold leading-normal text-cyan-500 antialiased cursor-pointer"
+                            onClick={() => Navigate("/")}
                         >
                             Sign up
                         </a>
