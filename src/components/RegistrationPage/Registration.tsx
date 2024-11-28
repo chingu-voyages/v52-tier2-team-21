@@ -81,9 +81,10 @@ function Registration() {
             return
         }
         toast.success("Registration Completed")
+        localStorage.setItem("user_info",JSON.stringify(sigupDetails))
         setTimeout(() => {
             Navigate("/sign-in")
-        }, 3000);
+        }, 2000);
     }
 
     return (
