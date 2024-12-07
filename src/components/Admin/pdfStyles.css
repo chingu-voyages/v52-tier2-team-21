@@ -1,0 +1,6 @@
+.k-pdf-export .hideOnPDF {
+    display: none !important;
+  }
+.k-pdf-export .bgOnPrint {
+    background-color: rgb(238, 235, 235) !important;
+  }

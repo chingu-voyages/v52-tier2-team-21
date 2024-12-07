@@ -30,10 +30,11 @@ function Login() {
         }
         if (userDetails == null ) {
             toast.error("Kindly Register first")
+            return
         }
-        console.log(sigupDetails?.email,"first",JSON.parse(userDetails)?.email)
         if (sigupDetails?.email != JSON.parse(userDetails)?.email) {
             toast.error("No user found with this email")
+            return
         }
         if(
             sigupDetails?.pass != JSON.parse(userDetails)?.pass
