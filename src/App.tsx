@@ -6,30 +6,32 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 const Login = React.lazy(() => import("./components/LoginPage/Login"));
 const Registration = React.lazy(() => import("./components/RegistrationPage/Registration"));
 const AdminDashboard = React.lazy(() => import("./components/Admin/Dashboard/Dashboard"));
-const Homepage = React.lazy(() => import("./components/Resident/HomePagge/Homepage"));
+const Homepage = React.lazy(() => import("./components/Resident/HomePagge/hompePage"));
 
 
 function App() {
   return (
     <BrowserRouter>
-    <Suspense
-      fallback={
-        <div className="flex justify-center items-center h-[100vh]">
-          <img src={Animation} width={200} height={200} alt="loader" />
-        </div>
-      }
-    >
-      <Routes>
-        <Route
-          path="/sign-in"
-          element={<Login />}
-        />
-        <Route path="/" element={<Registration />} />
-        <Route path="/app/admin-dashboard" element={<AdminDashboard />} />
-        <Route path="/app/resident" element={<Homepage />} />
-      </Routes>
-    </Suspense>
-  </BrowserRouter>
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center h-[100vh]">
+            <img src={Animation} width={200} height={200} alt="loader" />
+          </div>
+        }
+      >
+        <Routes>
+          <Route
+            path="/sign-in"
+            element={<Login />}
+          />
+          <Route path="/" element={<Registration />} />
+          <Route path="/app/resident" element={<Homepage />} />
+          <Route path="/app/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/app/admin-appointment-request" element={<AdminDashboard />} />
+          <Route path="/app/admin-appointment-schedule" element={<AdminDashboard />} />
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   );
 }
 
