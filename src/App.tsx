@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 const Login = React.lazy(() => import("./components/LoginPage/Login"));
 const Registration = React.lazy(() => import("./components/RegistrationPage/Registration"));
 const AdminDashboard = React.lazy(() => import("./components/Admin/Dashboard/Dashboard"));
-const Homepage = React.lazy(() => import("./components/Resident/HomePagge/Homepage"));
+const Homepage = React.lazy(() => import("./components/Resident/HomePagge/hompePage"));
 
 
 function App() {
