@@ -7,6 +7,8 @@ const Login = React.lazy(() => import("./components/LoginPage/Login"));
 const Registration = React.lazy(() => import("./components/RegistrationPage/Registration"));
 const AdminDashboard = React.lazy(() => import("./components/Admin/Dashboard/Dashboard"));
 const Homepage = React.lazy(() => import("./components/Resident/HomePagge/hompePage"));
+const UserPanel = React.lazy(() => import("./components/user/resident"));
+const Dashboard = React.lazy(() => import("./components/user/dashboard"));
 
 
 function App() {
@@ -25,10 +27,12 @@ function App() {
             element={<Login />}
           />
           <Route path="/" element={<Registration />} />
-          <Route path="/app/resident" element={<Homepage />} />
+          <Route path="/home" element={<Homepage />} />
           <Route path="/app/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/app/admin-appointment-request" element={<AdminDashboard />} />
           <Route path="/app/admin-appointment-schedule" element={<AdminDashboard />} />
+          <Route path='/app/resident' element={<UserPanel/>}/>
+          <Route path='/app/dashboard' element={<Dashboard/>}/>
         </Routes>
       </Suspense>
     </BrowserRouter>

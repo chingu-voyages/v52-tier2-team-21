@@ -52,7 +52,7 @@ function Login() {
         }
         toast.success("Login Succesfully")
         setTimeout(() => {
-            if(JSON.parse(userDetails)?.role == "Admin")
+            if(JSON.parse(userDetails)?.role === "Admin")
                 {
                     Navigate("/app/admin-dashboard")
                 }
