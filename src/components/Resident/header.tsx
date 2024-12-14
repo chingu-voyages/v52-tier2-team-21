@@ -6,7 +6,7 @@ const Header: React.FC = () => {
   const navigate = useNavigate()
 
   const handleNavigation = () => {
-    navigate('/register'); 
+    navigate('/app/resident'); 
   };
   return (
     <header className="bg-[#81BFDA] bg-opacity-20 shadow-md backdrop-filter backdrop-blur-lg" >

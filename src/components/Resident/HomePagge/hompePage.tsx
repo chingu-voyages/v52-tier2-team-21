@@ -8,9 +8,6 @@ import Header from "../header";
 const HomePage: React.FC = () => {
   const navigate = useNavigate()
 
-  const handleNavigation = () => {
-    navigate('/register'); 
-  };
   return (
     <div className="min-h-screen flex flex-col">
       <Header/>
@@ -21,12 +18,6 @@ const HomePage: React.FC = () => {
         <h1 className="text-4xl font-bold text-gray-800 text-center leading-relaxed">
           Transforming sunlight into sustainable energy <br/> for a <span className="text-yellow-400">cleaner tomorrow.</span>
         </h1>
-        <button
-          onClick={handleNavigation}
-          className="mt-6 px-8 py-3 bg-[#10B981] text-white text-lg font-semibold rounded hover:bg-green-600 transition duration-300"
-        >
-         Get Started
-       </button>
        </div>
       <Footer/>
     </div>

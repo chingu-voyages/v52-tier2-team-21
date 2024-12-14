@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Logo from "../assets/Logo.png"
+import { useNavigate } from 'react-router-dom';
 
 
 function Header(props: any) {
@@ -8,7 +9,7 @@ function Header(props: any) {
         setisSidebarOpen,
         screen
     } = props
-
+    const navigate = useNavigate();
     const JsonData: any = localStorage.getItem("user_info") ? (localStorage.getItem("user_info")) : null;
     const userDetails = JSON.parse(JsonData)
     return (
@@ -19,11 +20,10 @@ function Header(props: any) {
                 >
                     <div className={`px-5 xl:px-12 py-4 flex justify-${screen <= 938 ? "between" : "end"} w-full items-center`}>
                        {screen <= 938 &&
-                        <svg 
-                        onClick={() => setisSidebarOpen(!isSidebarOpen)}
-                        className="cursor-pointer h-6 w-6 text-white hover:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>}
+                       <svg 
+                       onClick={() => setisSidebarOpen(!isSidebarOpen)}
+                        className="cursor-pointer h-6 w-6 text-white hover:text-gray-200" viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <line x1="3" y1="12" x2="21" y2="12" />  <line x1="3" y1="6" x2="21" y2="6" />  <line x1="3" y1="18" x2="21" y2="18" /></svg>
+                        }
 
                         <div className="relative inline-block group">
                             <svg className="cursor-pointer h-6 w-6 text-white hover:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -49,6 +49,7 @@ function Header(props: any) {
                                         <li className="py-1">{userDetails?.email}</li>
                                         <li className="py-1">{userDetails?.role}</li>
                                         <li
+                                        onClick={() => navigate("/sign-in")}
                                             className="pt-1 flex items-center gap-3 cursor-pointer">
                                             <svg className="w-4 h-4 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 16">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h11m0 0-4-4m4 4-4 4m-5 3H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h3" />
