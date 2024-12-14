@@ -104,36 +104,6 @@ function Sidebar(props: any) {
             setActiveBtn("Schedule")
         }
     }, [])
-
-    useEffect(() => {
-        const fetchAddresses = async () => {
-            const response = await fetch('https://data.lacity.org/resource/4ca8-mxuh.json');
-            const data = await response.json();
-            const addresses = data.map((item: any) => ({
-                value: item.hse_nbr,
-                label: `${item.str_nm} ${item.hse_dir_cd} ${item.str_sfx_cd}, ${item.zip_cd}`
-            }));
-
-        };
-
-        fetchAddresses();
-    }, []);
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             console.log("first1")
-    //             const response = await fetch('https://data.lacity.org/api/views/4ca8-mxuh/rows.json?accessType=DOWNLOAD');
-    //             console.log("first2", response)
-    //             const result = await response.json();
-    //             console.log("result---", result)
-    //         } catch (error) {
-    //         } finally {
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, []);
     return (
         <div className="card w-72 h-[100vh] overflow-y-auto bg-white p-5 shadow-md shadow-purple-200/50 ">
             {screen <= 938 &&

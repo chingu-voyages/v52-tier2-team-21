@@ -57,7 +57,7 @@ function Login() {
                     Navigate("/app/admin-dashboard")
                 }
                 else{
-                    Navigate("/app/resident")
+                    Navigate("/home")
                 }
         }, 2000);
     }

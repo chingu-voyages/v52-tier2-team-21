@@ -1,59 +1,61 @@
 import { PDFExport } from '@progress/kendo-react-pdf';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { downloadExcel } from 'react-export-table-to-excel';
 import "../pdfStyles.css"
 import Select from 'react-select'
 import MyMap from '../../../container/Map';
+import moment from 'moment';
 
-function AppointmentSchedule(props:any) {
+function AppointmentSchedule(props: any) {
     const {
         screen
     } = props
-
+    const [appointmentSchedule, setAppointmentSchedule] = useState<any>()
     const pdfExportComponent = useRef<PDFExport | null>(null);
     const [view, setView] = useState("Both View")
-    const [selectedSchedule, setSelectedSchedule] = useState<string>("")
+    const [selectedSchedule, setSelectedSchedule] = useState<string>("Yearly")
+    const [refresh, setRefresh] = useState<number>(0)
 
     const optionArr = [
         { label: "Weekly", value: "Weekly" },
         { label: "Monthly", value: "Monthly" },
         { label: "Yearly", value: "Yearly" },
-        { label: "Daily", value: "Daily" }
+        { label: "Daily", value: "Daily" },
     ];
 
     const header = ["Time Slot", "Name", "Contact", "Address"];
-    const appointmentSchedule = [
-        {
-            time_slot: "10:00 AM",
-            name: "John",
-            contact: "123-456-7890",
-            address: "123 Main St, Anytown, USA",
-        },
-        {
-            time_slot: "11:00 AM",
-            name: "Jane",
-            contact: "987-654-3210",
-            address: "456 Elm St, Othertown, USA",
-        },
-        {
-            time_slot: "12:00 PM",
-            name: "Alice",
-            contact: "555-555-5555",
-            address: "789 Oak St, Sometown, USA",
-        },
-        {
-            time_slot: "1:00 PM",
-            name: "Bob",
-            contact: "444-444-4444",
-            address: "321 Pine St, Anycity, USA",
-        },
-        {
-            time_slot: "2:00 PM",
-            name: "Eve",
-            contact: "222-222-2222",
-            address: "654 Maple St, Yourtown, USA",
-        }
-    ];
+    // const appointmentSchedule = [
+    //     {
+    //         time_slot: "10:00 AM",
+    //         name: "John",
+    //         contact: "123-456-7890",
+    //         address: "123 Main St, Anytown, USA",
+    //     },
+    //     {
+    //         time_slot: "11:00 AM",
+    //         name: "Jane",
+    //         contact: "987-654-3210",
+    //         address: "456 Elm St, Othertown, USA",
+    //     },
+    //     {
+    //         time_slot: "12:00 PM",
+    //         name: "Alice",
+    //         contact: "555-555-5555",
+    //         address: "789 Oak St, Sometown, USA",
+    //     },
+    //     {
+    //         time_slot: "1:00 PM",
+    //         name: "Bob",
+    //         contact: "444-444-4444",
+    //         address: "321 Pine St, Anycity, USA",
+    //     },
+    //     {
+    //         time_slot: "2:00 PM",
+    //         name: "Eve",
+    //         contact: "222-222-2222",
+    //         address: "654 Maple St, Yourtown, USA",
+    //     }
+    // ];
 
     function handleDownloadExcel() {
         downloadExcel({
@@ -61,7 +63,18 @@ function AppointmentSchedule(props:any) {
             sheet: "Appointment",
             tablePayload: {
                 header,
-                body: appointmentSchedule,
+                body: appointmentSchedule?.map((item: any) => {
+                    return {
+                        timeslot:
+                            item.timeslot?.split("-")?.length == 2 ?
+                                `${moment(item.timeslot?.split("-")[0])?.format("YYYY-MM-DD")} - ${item?.timeslot?.split("-")[1]}` :
+                                item.timeslot?.toUpperCase()
+                        ,
+                        name: item?.name,
+                        phone: item?.phone,
+                        address: item?.address
+                    }
+                }) || [],
             },
         });
     }
@@ -72,6 +85,21 @@ function AppointmentSchedule(props:any) {
         }
     }
 
+    useEffect(() => {
+        const requests = JSON.parse(localStorage.getItem('requests') || '[]');
+        if (requests?.length > 0) {
+            requests.map((item: any) => {
+                return {
+                    timeslot: item?.timeslot,
+                    name: item?.name,
+                    phone: item?.phone,
+                    address: item?.address
+                }
+            })
+            setAppointmentSchedule(requests)
+        }
+    }, [])
+
 
     return (
         <div className='h-full divide-y divide-slate-300'>
@@ -80,21 +108,57 @@ function AppointmentSchedule(props:any) {
             </div>
             <div className='p-5'>
                 <div className={`flex ${screen <= 425 ? "flex-col align-middle" : ""} justify-between mb-3 text-slate-950`}>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className={`grid grid-cols-${screen <= 494 ? "1" : "2"} gap-4`}>
                         <Select
+                            className='min-w-40'
                             options={optionArr}
-                            isClearable={true}
                             value={optionArr?.find((item) => item?.value == selectedSchedule)}
                             onChange={(select) => {
                                 if (select?.value) {
-                                    setSelectedSchedule(select?.value)
-                                }
-                                else {
-                                    setSelectedSchedule("")
+                                    setSelectedSchedule(select?.value);
+                                } else {
+                                    setSelectedSchedule("");
+                                    const requests = JSON.parse(localStorage.getItem('requests') || '[]');
+                                    if (requests?.length > 0) {
+                                        requests.map((item: any) => {
+                                            return {
+                                                timeslot: item?.timeslot,
+                                                name: item?.name,
+                                                phone: item?.phone,
+                                                address: item?.address
+                                            }
+                                        })
+                                        setAppointmentSchedule(requests)
+                                    }
                                 }
                             }}
                         />
-                        <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Generate</button>
+                        <button
+                            onClick={() => {
+                                const now = moment();
+                                const filteredAppointments = appointmentSchedule?.filter((item: any) => {
+                                    if (item.timeslot.split("-")?.length === 2) {
+                                        const itemDate = moment(item.timeslot.split("-")[0]);
+
+                                        if (selectedSchedule === "Daily") {
+                                            return itemDate.isSame(now, 'day');
+                                        }
+                                        if (selectedSchedule === "Weekly") {
+                                            return itemDate.isSame(now, 'week');
+                                        }
+                                        if (selectedSchedule === "Monthly") {
+                                            return itemDate.isSame(now, 'month');
+                                        }
+                                        if (selectedSchedule === "Yearly") {
+                                            return itemDate.isSame(now, 'year');
+                                        }
+                                    }
+                                    return true;
+                                });
+                                setAppointmentSchedule(filteredAppointments)
+                                setRefresh(refresh + 1)
+                            }}
+                            type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Generate</button>
                     </div>
                     <section className="flex justify-center items-center gap-1">
                         <div className="relative inline-block group">
@@ -275,19 +339,24 @@ function AppointmentSchedule(props:any) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {appointmentSchedule?.map((item, index) => (
-                                        <tr className="bg-purple-500 border-b text-white">
+                                    {appointmentSchedule?.map((item: any, index: number) => (
+                                        <tr key={index} className="bg-purple-500 border-b text-white">
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                                {item?.time_slot}
+                                                {
+                                                    item.timeslot?.split("-")?.length == 2 ?
+                                                        `${moment(item.timeslot?.split("-")[0])?.format("YYYY-MM-DD")} - ${item?.timeslot?.split("-")[1]}` :
+                                                        item.timeslot?.toUpperCase()
+                                                }
+                                                {/* {item?.timeslot?.toUpperCase()} */}
                                             </th>
                                             <td className="px-6 py-4">
-                                                {item?.name}
+                                                {item?.name?.toUpperCase()}
                                             </td>
                                             <td className="px-6 py-4">
-                                                {item?.contact}
+                                                {item?.phone}
                                             </td>
                                             <td className="px-6 py-4">
-                                                {item?.address}
+                                                {item?.address?.toUpperCase()}
                                             </td>
 
                                         </tr>

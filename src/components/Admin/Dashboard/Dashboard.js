@@ -61,7 +61,7 @@ function Dashboard() {
           </div>
         )}
         <div className={`col-${isSidebarOpen ? "span-1" : "1"}`}>
-          <div className=" flex flex-col gap-3 h-[100vh]">
+          <div className="grid flex flex-col gap-3 h-[100vh]">
             <Header 
             isSidebarOpen={isSidebarOpen}
             setisSidebarOpen={setisSidebarOpen}

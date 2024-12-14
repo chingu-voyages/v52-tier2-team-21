@@ -1,33 +1,35 @@
 import { PDFExport } from '@progress/kendo-react-pdf';
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { downloadExcel } from 'react-export-table-to-excel';
 import "../pdfStyles.css"
+import moment from 'moment';
 
 function AppointmentRequest(props: any) {
     const {
         screen
     } = props
     const pdfExportComponent = useRef<PDFExport | null>(null);
-
+    const [appointment, setAppointment] = useState<any>()
+    const [refresh, setRefresh] = useState(0)
     const header = ["Name", "Email", "Phone", "Address", "Date & Time", "Status"];
-    const appointments = [
-        {
-            name: "John Doe",
-            email: "john@example.com",
-            phone: "123-456-7890",
-            address: "123 Main St, Anytown, USA",
-            dateTime: "2024-01-15 morning",
-            status: "pending"
-        },
-        {
-            name: "Jane Smith",
-            email: "jane@example.com",
-            phone: "098-765-4321",
-            address: "456 Oak Ave, Somewhere, USA",
-            dateTime: "2024-01-15 afternoon",
-            status: "approved"
-        }
-    ];
+    // const appointments = [
+    //     {
+    //         name: "John Doe",
+    //         email: "john@example.com",
+    //         phone: "123-456-7890",
+    //         address: "123 Main St, Anytown, USA",
+    //         dateTime: "2024-01-15 morning",
+    //         status: "pending"
+    //     },
+    //     {
+    //         name: "Jane Smith",
+    //         email: "jane@example.com",
+    //         phone: "098-765-4321",
+    //         address: "456 Oak Ave, Somewhere, USA",
+    //         dateTime: "2024-01-15 afternoon",
+    //         status: "approved"
+    //     }
+    // ];
 
     function handleDownloadExcel() {
         downloadExcel({
@@ -35,7 +37,16 @@ function AppointmentRequest(props: any) {
             sheet: "Appointment",
             tablePayload: {
                 header,
-                body: appointments,
+                body: appointment?.map((item: any) => {
+                    return {
+                        ...item,
+                        timeslot:
+                            item.timeslot?.split("-")?.length == 2 ?
+                                `${moment(item.timeslot?.split("-")[0])?.format("YYYY-MM-DD")} - ${item?.timeslot?.split("-")[1]}` :
+                                item.timeslot?.toUpperCase()
+                        ,
+                    }
+                }) || [],
             },
         });
     }
@@ -46,6 +57,20 @@ function AppointmentRequest(props: any) {
         }
     }
 
+    useEffect(() => {
+        const requests = JSON.parse(localStorage.getItem('requests') || '[]');
+        if (requests?.length > 0) {
+            requests.map((item: any) => {
+                return {
+                    timeslot: item?.timeslot,
+                    name: item?.name,
+                    phone: item?.phone,
+                    address: item?.address
+                }
+            })
+            setAppointment(requests)
+        }
+    }, [refresh])
 
     return (
         <div className='h-full divide-y divide-slate-300'>
@@ -153,32 +178,57 @@ function AppointmentRequest(props: any) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {appointments?.map((item, index) => (
+                                {appointment?.map((item: any, index: number) => (
                                     <tr className="bg-purple-500 border-b text-white">
                                         <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {item?.name}
+                                            {item?.name?.toUpperCase()}
                                         </th>
                                         <td className="px-6 py-4">
-                                            {item?.email}
+                                            {item?.email?.toUpperCase()}
                                         </td>
                                         <td className="px-6 py-4">
                                             {item?.phone}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item?.address}
+                                            {item?.address?.toUpperCase()}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item?.dateTime}
+                                            {
+                                                item.timeslot?.split("-")?.length == 2 ?
+                                                    `${moment(item.timeslot?.split("-")[0])?.format("YYYY-MM-DD")} - ${item?.timeslot?.split("-")[1]}` :
+                                                    item.timeslot?.toUpperCase()
+                                            }
+                                            {/* {item?.timeslot?.toUpperCase()} */}
                                         </td>
                                         <td className="px-6 py-4">
-                                            {item?.status}
+                                            {item?.status?.toUpperCase()}
                                         </td>
                                         <td className="px-6 py-4 hideOnPDF">
                                             <div className='flex gap-3'>
-                                                <svg className="h-8 w-8 text-green-500 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <svg
+                                                    onClick={() => {
+                                                        appointment[index] = {
+                                                            ...appointment[index],
+                                                            status: "approved"
+                                                        }
+                                                        localStorage.setItem('requests', JSON.stringify(appointment));
+                                                        setAppointment(appointment)
+                                                        setRefresh(refresh + 1)
+                                                    }}
+                                                    className="h-8 w-8 text-green-500 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                                 </svg>
-                                                <svg className="h-8 w-8 text-red-500 cursor-pointer" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z" />  <circle cx="12" cy="12" r="9" />  <path d="M10 10l4 4m0 -4l-4 4" /></svg>
+                                                <svg
+                                                    onClick={() => {
+                                                        appointment[index] = {
+                                                            ...appointment[index],
+                                                            status: "pending"
+                                                        }
+                                                        localStorage.setItem('requests', JSON.stringify(appointment));
+                                                        setAppointment(appointment)
+                                                        setRefresh(refresh + 1)
+                                                    }}
+                                                    className="h-8 w-8 text-red-500 cursor-pointer" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z" />  <circle cx="12" cy="12" r="9" />  <path d="M10 10l4 4m0 -4l-4 4" /></svg>
                                             </div>
                                         </td>
                                     </tr>
